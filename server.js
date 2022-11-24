@@ -1,16 +1,32 @@
 const express = require('express')
-const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 const connectDb = require('./config/connexion')
-const dotenv = require('dotenv')
-dotenv.config()
-
-const password = process.env.PASSWORD
+const userRoutes = require('./routes/userRoute')
+const commentRoutes = require('./routes/commentRoute')
+const sousComentRoutes = require('./routes/sousCommentRoute')
+const likeCommentRoutes = require('./routes/likeCommentRoute')
+const dislikeCommentRoutes = require('./routes/dislikeCommentRoute')
 
 const app = express()
 connectDb()
 const port = process.env.PORT || 9000
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+  });
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended : false}))
+app.use('/comments', commentRoutes)  
+app.use('/like', likeCommentRoutes)
+app.use('/souscomment', sousComentRoutes)
+app.use('/dislike', dislikeCommentRoutes)
+app.use('/auth', userRoutes)
+
 
 app.listen(port, ()=>{
-    console.log(`server running : ${password}`);
+    console.log(`server running`);
 })
