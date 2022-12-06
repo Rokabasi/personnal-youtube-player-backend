@@ -4,7 +4,8 @@ exports.createCommment = (req,res,next) => {
     const comment = new Comments({
         description : req.body.description,
         video : req.body.video,
-        date : req.body.date
+        userid : req.body.userId,
+        parentId : req.body.parentId
     })
     comment.save()
     .then((data) => { res.status(201).json({data})})
@@ -16,7 +17,8 @@ exports.createCommment = (req,res,next) => {
 // }
 
 exports.getAllComments = (req,res,next) =>{
-    Comments.find()
+    const urlParams = req.params.video
+    Comments.find({video:urlParams})
     .then(comment => res.status(200).json(comment))
-    .catch(error => res.status(400).json({error}))
+    .catch((error) => res.status(400).json(console.log(error)))
 }

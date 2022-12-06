@@ -1,9 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const {cloudinary} = require('./config/cloudinary')
 const connectDb = require('./config/connexion')
 const userRoutes = require('./routes/userRoute')
 const commentRoutes = require('./routes/commentRoute')
-const sousComentRoutes = require('./routes/sousCommentRoute')
 const likeCommentRoutes = require('./routes/likeCommentRoute')
 const dislikeCommentRoutes = require('./routes/dislikeCommentRoute')
 
@@ -22,9 +22,23 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}))
 app.use('/comments', commentRoutes)  
 app.use('/like', likeCommentRoutes)
-app.use('/souscomment', sousComentRoutes)
 app.use('/dislike', dislikeCommentRoutes)
-app.use('/auth', userRoutes)
+app.use('/users', userRoutes)
+app.post('/api/upload', async(req,res)=>{
+  try {
+
+    const fileStr = req.body.data
+    const uploadedResponse = await cloudinary.uploader.
+    upload(fileStr, {
+      upload_preset : 'dev_setups',
+    })
+    console.log(uploadedResponse)
+    res.json({mes:"yayaya"})
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({err:"Something is wrong"})
+  }
+})
 
 
 app.listen(port, ()=>{

@@ -3,7 +3,7 @@ const router = express.Router()
 const Comment = require("../controllers/commentsCtrl")
 
 
-router.get('/', Comment.getAllComments )
-router.post('/addcomment', Comment.createCommment)
+router.get('/:video', Comment.getAllComments )
+router.post('/add', Comment.createCommment)
 
 module.exports = router

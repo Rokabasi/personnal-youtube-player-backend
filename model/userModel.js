@@ -6,6 +6,7 @@ const userSchema = mongoose.Schema({
     facebook : { type : String},
     twitter : { type : String},
     instagram : { type : String},
+    img : {type : String}
 })
 
 module.exports = mongoose.model('usermodel',userSchema)

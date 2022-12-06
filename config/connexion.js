@@ -13,7 +13,7 @@ const connectDb = async () => {
             useUnifiedTopology:true
         })
         .then(() => console.log('connexion à mongoose reussie'))
-        .catch(() => console.log('connexion à mongose echouée'));
+        .catch((error) => console.log('connexion à mongose echouée',error));
 }
 
 module.exports = connectDb
