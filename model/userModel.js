@@ -2,11 +2,17 @@ const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
     email : { type : String, require : true},
-    name : { type :String, require :true},
-    facebook : { type : String},
-    twitter : { type : String},
-    instagram : { type : String},
-    img : {type : String}
+    displayName : { type :String, require :true},
+    userImage : { type :String, require :true},
+    facebookLink : { type : String},
+    twitterLink : { type : String},
+    instagramLink : { type : String},
+    linkedInLink : {type : String},
+    facebookLinkText : { type : String},
+    twitterLinkText : { type : String},
+    instagramLinkText : { type : String},
+    linkedInLinkText : {type : String}
+
 })
 
 module.exports = mongoose.model('usermodel',userSchema)
