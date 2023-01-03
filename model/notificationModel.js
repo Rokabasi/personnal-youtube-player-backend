@@ -6,7 +6,7 @@ const notificationSchema = mongoose.Schema({
         currentUserId : { type : String, require : true}, 
         commentUserId : { type : String, require : true},    
         videoId : { type : String, require : true}, 
-        channelId : { type : String, require : true}, 
+        userImage : { type : String, require : true}, 
         userName : { type : String, require : true},   
         mention : { type : String}
 },

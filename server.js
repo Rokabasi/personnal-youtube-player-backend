@@ -26,11 +26,14 @@ io.on("connection", (socket) => {
       video: message.video,
       userId: message.userId,
       userName: message.userName,
-      parentId : message.parentId,
-      userImage : message.userImage
+      parentId: message.parentId,
+      userImage: message.userImage,
     });
-    comment
-      .save()
+    comment.save().then((newComment) => {
+      {
+        io.emit("getNewComment", newComment);
+      }
+    });
     if (message.parentId !== null) {
       const notification = new notifications({
         description: message.notification,
@@ -41,6 +44,7 @@ io.on("connection", (socket) => {
         userName: message.userName,
         mention: null,
         channelId: message.channelId,
+        userImage: message.userImage,
       });
       notification.save().then((data) => {
         io.emit("receiveNewnotification", data);
@@ -50,23 +54,24 @@ io.on("connection", (socket) => {
 
   socket.on("getAllComments", () => {
     commentModels
-      .find().sort({createdAt:-1})
+      .find()
+      .sort({ createdAt: -1 })
       .then((comment) => io.emit("receiveAllComments", comment))
       .catch((error) => socket.emit("receiveAllComments", error));
   });
 
   socket.on("getNotifications", (userId) => {
     notifications
-      .find({ commentUserId: userId }).sort({createdAt:-1})
-      .then((notification) => io.emit("receiveAllNotifications", notification))
-      .catch((error) => socket.emit("receiveAllNotifications", error));
+      .find({ commentUserId: userId })
+      .sort({ createdAt: -1 })
+      .then((notification) => socket.emit("receiveAllNotifications", notification));
   });
 
   socket.on("UpdateNotifications", (userId) => {
     const mention = "see";
     notifications
       .updateMany({ commentUserId: userId }, { $set: { mention: mention } })
-      .then((comment) => io.emit("receiveUpdateNotifications", comment))
+      .then((comment) => socket.emit("receiveUpdateNotifications", comment))
       .catch((error) => socket.emit("receiveUpdateNotifications", error));
   });
   socket.on("getLike", () => {
@@ -102,6 +107,7 @@ io.on("connection", (socket) => {
                 currentUserId: likeData.userId,
                 userName: likeData.userName,
                 mention: null,
+                userImage: likeData.userImage,
                 channelId: likeData.channelId,
               });
               notification.save().then((data) => {
@@ -132,24 +138,23 @@ io.on("connection", (socket) => {
                 idComment: dislikeData.commentId,
                 idUser: dislikeData.userId,
               });
-              dislike
-                .save()
-                .then((dislike) => {
-                  io.emit("receiveNewDislike", dislike);
-                })
-                const notification = new notifications({
-                  description: dislikeData.notification,
-                  videoId: dislikeData.video,
-                  commentUserId: dislikeData.commentUserId,
-                  commentId: dislikeData.commentId,
-                  currentUserId: dislikeData.userId,
-                  userName: dislikeData.userName,
-                  mention: null,
-                  channelId: dislikeData.channelId,
-                });
-                notification.save().then((data) => {
-                  io.emit("receiveNewnotification", data);
-                });
+              dislike.save().then((dislike) => {
+                io.emit("receiveNewDislike", dislike);
+              });
+              const notification = new notifications({
+                description: dislikeData.notification,
+                videoId: dislikeData.video,
+                commentUserId: dislikeData.commentUserId,
+                commentId: dislikeData.commentId,
+                currentUserId: dislikeData.userId,
+                userName: dislikeData.userName,
+                mention: null,
+                userImage: dislikeData.userImage,
+                channelId: dislikeData.channelId,
+              });
+              notification.save().then((data) => {
+                io.emit("receiveNewnotification", data);
+              });
             }
           });
       })
@@ -171,7 +176,7 @@ io.on("connection", (socket) => {
         const user = new userModel({
           email: newUser.email,
           displayName: newUser.displayName,
-          userImage : newUser.userImage
+          userImage: newUser.userImage,
         });
         user
           .save()
