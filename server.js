@@ -16,7 +16,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET,POST"],
+    methods: ["GET,POST","PUT"],
   },
 });
 io.on("connection", (socket) => {
@@ -199,9 +199,11 @@ io.on("connection", (socket) => {
       .catch((error) => socket.emit("receiveOneUser", error));
   });
   socket.on("updateOneUser", (userData) => {
+    
     const user = {
       _id: userData._id,
       email: userData.email,
+      userImage : userData.userImage,
       displayName: userData.displayName,
       facebookLink: userData.facebookLink,
       twitterLink: userData.twitterLink,
@@ -216,6 +218,7 @@ io.on("connection", (socket) => {
       .findOneAndUpdate({ _id: userData._id }, { ...user })
       .then((user) => {
         if (user) {
+          console.log(user);
           io.emit("receiveUpdateUser", user[0]);
         }
       });
