@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
     displayName : { type :String, require :true},
     userImage : { type :String, require :true},
     facebookLink : { type : String},
+    userImage : { type : String},
     twitterLink : { type : String},
     instagramLink : { type : String},
     linkedInLink : {type : String},
