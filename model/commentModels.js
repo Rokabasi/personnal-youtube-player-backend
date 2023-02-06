@@ -6,7 +6,7 @@ const commentSchema = mongoose.Schema({
         userId : { type : String, require : true}, 
         userName : { type : String, require : true}, 
         parentId : { type : String},
-        userImage : { type : String, require : true}
+        userImage : { type : String, require : true},
 },
 {
     timestamps :true

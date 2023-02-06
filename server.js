@@ -9,7 +9,7 @@ const likeModels = require("./model/likeCommentModel");
 const dislikeModels = require("./model/dislikeCommentModel");
 const userModel = require("./model/userModel");
 const notifications = require("./model/notificationModel");
-const { create } = require("./model/commentModels");
+
 connectDb();
 app.use(cors());
 const server = http.createServer(app);
@@ -218,7 +218,6 @@ io.on("connection", (socket) => {
       .findOneAndUpdate({ _id: userData._id }, { ...user })
       .then((user) => {
         if (user) {
-          console.log(user);
           io.emit("receiveUpdateUser", user[0]);
         }
       });
